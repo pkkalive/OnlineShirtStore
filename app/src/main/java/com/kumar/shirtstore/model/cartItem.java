@@ -4,20 +4,20 @@ package com.kumar.shirtstore.model;
  * Created by Purushotham on 06/08/17.
  */
 
-public class ItemDrawer {
+public class cartItem {
     private String title;
     private int icon;
     private String count = "0"; // boolean to set visiblity of the counter
     private boolean isCounterVisible = false;
 
-    public ItemDrawer(){}
+    public cartItem(){}
 
-    public ItemDrawer(String title, int icon){
+    public cartItem(String title, int icon){
         this.title = title;
         this.icon = icon;
     }
 
-    public ItemDrawer(String title, int icon, boolean isCounterVisible, String count){
+    public cartItem(String title, int icon, boolean isCounterVisible, String count){
         this.title = title;
         this.icon = icon;
         this.isCounterVisible = isCounterVisible;
