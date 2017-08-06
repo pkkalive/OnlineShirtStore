@@ -13,7 +13,7 @@
         android:orientation="horizontal"
         android:padding="10dp" >
 
-    <!-- ListRow Left sied Thumbnail image -->
+    <!-- ListRow Left side Thumbnail image -->
 
     <LinearLayout
         android:id="@+id/thumbnail"
