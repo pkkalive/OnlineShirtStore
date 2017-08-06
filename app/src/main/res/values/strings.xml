@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ShirtStore</string>
+    <string name="default_shirt_type">Oxford Shirt</string>
+    <string name="default_quantity">0</string>
+    <string name="default_price">USD 100</string>
+    <string name="default_weight">100 gm</string>
 </resources>
