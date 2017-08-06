@@ -4,4 +4,7 @@
     <string name="default_quantity">0</string>
     <string name="default_price">USD 100</string>
     <string name="default_weight">100 gm</string>
+    <string name="filter_by_size">Filter by Size</string>
+    <string name="filter_by_color">Filter by Color</string>
+    <string name="add_shopping_cart">Shopping Cart</string>
 </resources>
