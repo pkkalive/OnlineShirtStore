@@ -9,27 +9,27 @@ import java.util.Map;
 
 public class CartItems {
 
-    private Integer id;
-    private Integer price;
+    private int id;
+    private int price;
     private String picture;
     private String colour;
     private String size;
     private String name;
-    private Integer quantity;
+    private int quantity;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -65,11 +65,11 @@ public class CartItems {
         this.name = name;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 }
