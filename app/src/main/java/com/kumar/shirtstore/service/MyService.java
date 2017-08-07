@@ -22,6 +22,17 @@ public class MyService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         Uri uri = intent.getData();
         Log.i(TAG, "onHandleIntent: " +uri.toString());
+    }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.i(TAG, "onCreate");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy");
     }
 }
