@@ -22,7 +22,7 @@ import com.kumar.shirtstore.utils.NetworkHelper;
 public class MainActivity extends AppCompatActivity implements HttpUrl {
 
     TextView output;
-    ListView productList;
+//    ListView productList;
     private boolean networkOk;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
         networkOk = NetworkHelper.hasNetworkAccess(this);
 
         output = (TextView)findViewById(R.id.output);
-        productList = (ListView) findViewById(R.id.products_listview);
+//        productList = (ListView) findViewById(R.id.products_listview);
 
-//        runIntent();
+        runIntent();
         LocalBroadcastManager.getInstance(getApplicationContext())
                 .registerReceiver(mBroadcastReceiver,
                         new IntentFilter(MyService.MY_SERVICE_MESSAGE));

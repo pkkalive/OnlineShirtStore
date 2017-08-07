@@ -7,6 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.kumar.shirtstore.utils.HttpHelper;
+
+import java.io.IOException;
+
 /**
  * Created by Purushotham on 07/08/17.
  */
@@ -25,18 +29,18 @@ public class MyService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         Uri uri = intent.getData();
-
         Log.i(TAG, "onHandleIntent: " + counter + " "+ uri.toString());
+        String reponse;
 
         try {
-            Thread.sleep(1000);
-            counter++;
-        } catch (InterruptedException e) {
+            reponse = HttpHelper.downloadUrl(uri.toString());
+        } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
 
         Intent messageIntent = new Intent(MY_SERVICE_MESSAGE);
-        messageIntent.putExtra(MY_SERVICE_PAYLOAD, "Service all done!");
+        messageIntent.putExtra(MY_SERVICE_PAYLOAD, reponse);
         LocalBroadcastManager manager =
                 LocalBroadcastManager.getInstance(getApplicationContext());
         manager.sendBroadcast(messageIntent);
