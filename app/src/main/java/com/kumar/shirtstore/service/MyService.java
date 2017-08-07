@@ -2,7 +2,9 @@ package com.kumar.shirtstore.service;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by Purushotham on 07/08/17.
@@ -10,12 +12,16 @@ import android.support.annotation.Nullable;
 
 public class MyService extends IntentService {
 
+    public static final String TAG = "MyService";
+
     public MyService() {
         super("MyService");
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        Uri uri = intent.getData();
+        Log.i(TAG, "onHandleIntent: " +uri.toString());
 
     }
 }
