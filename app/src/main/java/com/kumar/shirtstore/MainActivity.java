@@ -19,11 +19,14 @@ import com.kumar.shirtstore.model.CartItems;
 import com.kumar.shirtstore.service.MyService;
 import com.kumar.shirtstore.utils.NetworkHelper;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements HttpUrl {
 
-    TextView output;
 //    ListView productList;
     private boolean networkOk;
+    List<CartItems> mCartItems;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -31,8 +34,9 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
             CartItems[] cartItems = (CartItems[]) intent
                     .getParcelableArrayExtra(MyService.MY_SERVICE_PAYLOAD);
             Toast.makeText(MainActivity.this,
-                    "Received " + cartItems.length + "items from the service",
+                    "Received " + cartItems.length + " items from the service",
                     Toast.LENGTH_LONG).show();
+            mCartItems = Arrays.asList(cartItems);
         }
     };
 
@@ -43,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
 
         networkOk = NetworkHelper.hasNetworkAccess(this);
 
-        output = (TextView)findViewById(R.id.output);
 //        productList = (ListView) findViewById(R.id.products_listview);
 
         runIntent();
