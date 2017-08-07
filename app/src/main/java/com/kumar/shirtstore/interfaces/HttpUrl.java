@@ -5,4 +5,5 @@ package com.kumar.shirtstore.interfaces;
  */
 
 public interface HttpUrl {
+    public static final String JSON_URL = "http://mock-shirt-backend.getsandbox.com/shirts";
 }
