@@ -17,11 +17,13 @@ import android.widget.Toast;
 
 import com.kumar.shirtstore.interfaces.HttpUrl;
 import com.kumar.shirtstore.service.MyService;
+import com.kumar.shirtstore.utils.NetworkHelper;
 
 public class MainActivity extends AppCompatActivity implements HttpUrl {
 
     TextView output;
     ListView productList;
+    private boolean networkOk;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -37,13 +39,17 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        networkOk = NetworkHelper.hasNetworkAccess(this);
+
         output = (TextView)findViewById(R.id.output);
         productList = (ListView) findViewById(R.id.products_listview);
 
-        runIntent();
+//        runIntent();
         LocalBroadcastManager.getInstance(getApplicationContext())
                 .registerReceiver(mBroadcastReceiver,
                         new IntentFilter(MyService.MY_SERVICE_MESSAGE));
+
+        output.append("Network ok: "+ networkOk);
     }
 
     @Override
