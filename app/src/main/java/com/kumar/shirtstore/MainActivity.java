@@ -85,9 +85,13 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
     }
 
     public void runIntent(){
-        Intent intent = new Intent(this, MyService.class);
-        intent.setData(Uri.parse(JSON_URL));
-        startService(intent);
+        if (networkOk) {
+            Intent intent = new Intent(this, MyService.class);
+            intent.setData(Uri.parse(JSON_URL));
+            startService(intent);
+        } else {
+            Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
