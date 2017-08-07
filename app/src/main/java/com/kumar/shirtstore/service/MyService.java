@@ -10,8 +10,8 @@ import android.support.annotation.Nullable;
 
 public class MyService extends IntentService {
 
-    public MyService(String name) {
-        super(name);
+    public MyService() {
+        super("MyService");
     }
 
     @Override
