@@ -30,9 +30,9 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
         public void onReceive(Context context, Intent intent) {
             CartItems[] cartItems = (CartItems[]) intent
                     .getParcelableArrayExtra(MyService.MY_SERVICE_PAYLOAD);
-            for (CartItems item : cartItems) {
-                output.append(item.getName() + "\n");
-            }
+            Toast.makeText(MainActivity.this,
+                    "Received " + cartItems.length + "items from the service",
+                    Toast.LENGTH_LONG).show();
         }
     };
 
