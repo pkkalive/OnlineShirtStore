@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.kumar.shirtstore.model.CartItems;
 import com.kumar.shirtstore.utils.HttpHelper;
 
 import java.io.IOException;
@@ -30,20 +32,24 @@ public class MyService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         Uri uri = intent.getData();
         Log.i(TAG, "onHandleIntent: " + counter + " "+ uri.toString());
-        String reponse;
+        String response;
 
         try {
-            reponse = HttpHelper.downloadUrl(uri.toString());
+            response = HttpHelper.downloadUrl(uri.toString());
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
+        Gson gson = new Gson();
+        CartItems[] cartItems = gson.fromJson(response, CartItems[].class);
 
         Intent messageIntent = new Intent(MY_SERVICE_MESSAGE);
-        messageIntent.putExtra(MY_SERVICE_PAYLOAD, reponse);
+        messageIntent.putExtra(MY_SERVICE_PAYLOAD, cartItems);
         LocalBroadcastManager manager =
                 LocalBroadcastManager.getInstance(getApplicationContext());
         manager.sendBroadcast(messageIntent);
+
+
 
     }
 
