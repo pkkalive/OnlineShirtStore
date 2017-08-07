@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
         LocalBroadcastManager.getInstance(getApplicationContext())
                 .registerReceiver(mBroadcastReceiver,
                         new IntentFilter(MyService.MY_SERVICE_MESSAGE));
-
-        output.append("Network ok: "+ networkOk);
     }
 
     @Override
