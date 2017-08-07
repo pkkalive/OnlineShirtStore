@@ -1,16 +1,16 @@
 package com.kumar.shirtstore.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Purushotham on 06/08/17.
  */
 
-public class CartItems {
+public class CartItems implements Parcelable {
 
     private int id;
-    private int price;
+    private double price;
     private String picture;
     private String colour;
     private String size;
@@ -25,11 +25,11 @@ public class CartItems {
         this.id = id;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -72,4 +72,45 @@ public class CartItems {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeDouble(this.price);
+        dest.writeString(this.picture);
+        dest.writeString(this.colour);
+        dest.writeString(this.size);
+        dest.writeString(this.name);
+        dest.writeInt(this.quantity);
+    }
+
+    public CartItems() {
+    }
+
+    protected CartItems(Parcel in) {
+        this.id = in.readInt();
+        this.price = in.readDouble();
+        this.picture = in.readString();
+        this.colour = in.readString();
+        this.size = in.readString();
+        this.name = in.readString();
+        this.quantity = in.readInt();
+    }
+
+    public static final Parcelable.Creator<CartItems> CREATOR = new Parcelable.Creator<CartItems>() {
+        @Override
+        public CartItems createFromParcel(Parcel source) {
+            return new CartItems(source);
+        }
+
+        @Override
+        public CartItems[] newArray(int size) {
+            return new CartItems[size];
+        }
+    };
 }
