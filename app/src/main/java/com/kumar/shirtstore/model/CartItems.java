@@ -16,7 +16,6 @@ public class CartItems {
     private String size;
     private String name;
     private Integer quantity;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -73,13 +72,4 @@ public class CartItems {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
 }
