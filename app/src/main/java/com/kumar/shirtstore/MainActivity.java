@@ -6,18 +6,23 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.kumar.shirtstore.interfaces.HttpUrl;
 import com.kumar.shirtstore.model.CartItems;
 import com.kumar.shirtstore.service.MyService;
 import com.kumar.shirtstore.utils.NetworkHelper;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,16 +32,27 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
 //    ListView productList;
     private boolean networkOk;
     List<CartItems> mCartItems;
+    DrawerLayout mDrawerLayout;
+    ListView mDrawerList;
+    String[] mCategories;
+    RecyclerView mRecyclerView;
+    CartItemAdapter mItemAdapter;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             CartItems[] cartItems = (CartItems[]) intent
                     .getParcelableArrayExtra(MyService.MY_SERVICE_PAYLOAD);
-            Toast.makeText(MainActivity.this,
-                    "Received " + cartItems.length + " items from the service",
-                    Toast.LENGTH_LONG).show();
-            mCartItems = Arrays.asList(cartItems);
+            if (cartItems != null) {
+                Toast.makeText(MainActivity.this,
+                        "Received " + cartItems.length + " items from the service",
+                        Toast.LENGTH_LONG).show();
+                mCartItems = Arrays.asList(cartItems);
+            } else {
+                Toast.makeText(MainActivity.this,
+                        "Received 0 items from the service",
+                        Toast.LENGTH_LONG).show();
+            }
         }
     };
 
@@ -44,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rvItems);
 
         networkOk = NetworkHelper.hasNetworkAccess(this);
 
