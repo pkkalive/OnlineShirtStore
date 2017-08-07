@@ -11,11 +11,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kumar.shirtstore.interfaces.HttpUrl;
+import com.kumar.shirtstore.model.CartItems;
 import com.kumar.shirtstore.service.MyService;
 import com.kumar.shirtstore.utils.NetworkHelper;
 
@@ -28,9 +28,11 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String message =
-                    intent.getStringExtra(MyService.MY_SERVICE_PAYLOAD);
-            output.append(message + "\n");
+            CartItems[] cartItems = (CartItems[]) intent
+                    .getParcelableArrayExtra(MyService.MY_SERVICE_PAYLOAD);
+            for (CartItems item : cartItems) {
+                output.append(item.getName() + "\n");
+            }
         }
     };
 
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
         LocalBroadcastManager.getInstance(getApplicationContext())
                 .registerReceiver(mBroadcastReceiver,
                         new IntentFilter(MyService.MY_SERVICE_MESSAGE));
+
+
     }
 
     @Override
