@@ -33,14 +33,12 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     public static final String ITEM_ID_KEY = "item_id_key";
     public static final String ITEM_KEY = "item_key";
     private List<CartItems> mItems;
-    private Map<String, Bitmap> mBitmaps;
     private Context mContext;
     private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
 
-    public CartItemAdapter(Context context, List<CartItems> items, Map<String, Bitmap> bitmaps) {
+    public CartItemAdapter(Context context, List<CartItems> items) {
         this.mContext = context;
         this.mItems = items;
-        this.mBitmaps = bitmaps;
     }
 
     @Override
