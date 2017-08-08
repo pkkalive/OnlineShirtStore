@@ -22,12 +22,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-
 import com.kumar.shirtstore.interfaces.HttpUrl;
 import com.kumar.shirtstore.model.CartItems;
 import com.kumar.shirtstore.service.MyService;
 import com.kumar.shirtstore.utils.NetworkHelper;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,8 +55,6 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
                 Toast.makeText(MainActivity.this,
                         "Please wait retriving the information",
                         Toast.LENGTH_LONG).show();
-                runIntent();
-                displayDataItems(null);
             }
 
         }
@@ -107,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
             mCartItemAdapter = new CartItemAdapter(this, cartItemsList);
             mRecyclerView.setAdapter(mCartItemAdapter);
         }
-
     }
 
     @Override

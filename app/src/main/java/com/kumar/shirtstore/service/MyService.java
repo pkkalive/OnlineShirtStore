@@ -18,7 +18,6 @@ import java.io.IOException;
  */
 
 public class MyService extends IntentService {
-    int counter = 0;
 
     public static final String TAG = "MyService";
     public static final String MY_SERVICE_MESSAGE = "MyServiceMessage";
@@ -31,7 +30,7 @@ public class MyService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         Uri uri = intent.getData();
-        Log.i(TAG, "onHandleIntent: " + counter + " "+ uri.toString());
+        Log.i(TAG, "onHandleIntent: " + uri.toString());
         String response;
 
         try {
