@@ -75,9 +75,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
         try {
             holder.tvName.setText(item.getName());
-//            String imageFile = item.getPicture();
-//            InputStream inputStream = mContext.getAssets().open(imageFile);
-//            Drawable d = Drawable.createFromStream(inputStream, null);
             Bitmap bitmap = mBitmaps.get(item.getName());
             holder.imageView.setImageBitmap(bitmap);
 
