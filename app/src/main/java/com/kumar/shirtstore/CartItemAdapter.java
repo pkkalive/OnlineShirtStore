@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import com.kumar.shirtstore.utils.HttpHelper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Purushotham on 07/08/17.
@@ -32,14 +34,16 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     public static final String ITEM_ID_KEY = "item_id_key";
     public static final String ITEM_KEY = "item_key";
     private List<CartItems> mItems;
+    private Map<String, Bitmap> mBitmaps;
     private Context mContext;
     private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
 
-    public CartItemAdapter(Context context, List<CartItems> items) {
+    public CartItemAdapter(Context context, List<CartItems> items, Map<String, Bitmap> bitmaps) {
         this.mContext = context;
         this.mItems = items;
+        this.mBitmaps = bitmaps;
     }
-    public static ImageView imageView;
+
 
     @Override
     public CartItemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -71,9 +75,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
         try {
             holder.tvName.setText(item.getName());
-            String imageFile = item.getPicture();
-            ExtractImage extractImage = new ExtractImage();
-            extractImage.execute(imageFile);
+//            String imageFile = item.getPicture();
+//            InputStream inputStream = mContext.getAssets().open(imageFile);
+//            Drawable d = Drawable.createFromStream(inputStream, null);
+            Bitmap bitmap = mBitmaps.get(item.getName());
+            holder.imageView.setImageBitmap(bitmap);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,6 +117,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tvName;
+        public ImageView imageView;
         public View mView;
 
 
@@ -123,37 +130,37 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         }
     }
 
-    private class ExtractImage extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            Bitmap map = null;
-            for (String url : urls) {
-                map = downloadImage(url);
-            }
-            return map;
-        }
-
-        // Sets the Bitmap returned by doInBackground
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            imageView.setImageBitmap(result);
-        }
-
-        // Creates Bitmap from InputStream and returns it
-        private Bitmap downloadImage(String url) {
-            Bitmap bitmap = null;
-            InputStream stream = null;
-            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            bmOptions.inSampleSize = 1;
-            try {
-                stream = HttpHelper.getImage(url);
-                bitmap = BitmapFactory.
-                        decodeStream(stream, null, bmOptions);
-                stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-    }
+//    private class ExtractImage extends AsyncTask<String, Void, Bitmap> {
+//        @Override
+//        protected Bitmap doInBackground(String... urls) {
+//            Bitmap map = null;
+//            for (String url : urls) {
+//                map = downloadImage(url);
+//            }
+//            return map;
+//        }
+//
+//        // Sets the Bitmap returned by doInBackground
+//        @Override
+//        protected void onPostExecute(Bitmap result) {
+//            imageView.setImageBitmap(result);
+//        }
+//
+//        // Creates Bitmap from InputStream and returns it
+//        private Bitmap downloadImage(String url) {
+//            Bitmap bitmap = null;
+//            InputStream stream = null;
+//            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//            bmOptions.inSampleSize = 1;
+//            try {
+//                stream = HttpHelper.getImage(url);
+//                bitmap = BitmapFactory.
+//                        decodeStream(stream, null, bmOptions);
+//                stream.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            return bitmap;
+//        }
+//    }
 }
