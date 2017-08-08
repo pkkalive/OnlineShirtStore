@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
         public void onReceive(Context context, Intent intent) {
             CartItems[] cartItems = (CartItems[]) intent
                     .getParcelableArrayExtra(MyService.MY_SERVICE_PAYLOAD);
-            if (cartItems != null) {
+            if (cartItems !=null) {
                 Toast.makeText(MainActivity.this,
                         "Received " + cartItems.length + " items from the service",
                         Toast.LENGTH_LONG).show();
@@ -55,9 +55,12 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
                 displayDataItems(null);
             } else {
                 Toast.makeText(MainActivity.this,
-                        "Received 0 items from the service",
+                        "Please wait retriving the information",
                         Toast.LENGTH_LONG).show();
+                runIntent();
+                displayDataItems(null);
             }
+
         }
     };
 
@@ -91,8 +94,6 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
         if (grid) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         }
-
-        displayDataItems(null);
         runIntent();
         LocalBroadcastManager.getInstance(getApplicationContext())
                 .registerReceiver(mBroadcastReceiver,
@@ -102,8 +103,11 @@ public class MainActivity extends AppCompatActivity implements HttpUrl {
     }
 
     private void displayDataItems(String category) {
-        mCartItemAdapter = new CartItemAdapter(this, cartItemsList);
-        mRecyclerView.setAdapter(mCartItemAdapter);
+        if (cartItemsList != null) {
+            mCartItemAdapter = new CartItemAdapter(this, cartItemsList);
+            mRecyclerView.setAdapter(mCartItemAdapter);
+        }
+
     }
 
     @Override
