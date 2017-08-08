@@ -6,12 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -32,18 +28,18 @@ import com.kumar.shirtstore.interfaces.HttpUrl;
 import com.kumar.shirtstore.model.CartItems;
 import com.kumar.shirtstore.service.MyService;
 import com.kumar.shirtstore.utils.NetworkHelper;
+import com.kumar.shirtstore.utils.RequestPackage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
-        implements HttpUrl,LoaderManager.LoaderCallbacks<Map<String, Bitmap>>  {
+        implements HttpUrl  {
 
+    public static final String TAG = "MainActivity";
     boolean networkOk;
     List<CartItems> cartItemsList;
     DrawerLayout mDrawerLayout;
@@ -51,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     String[] mCategories;
     RecyclerView mRecyclerView;
     CartItemAdapter mCartItemAdapter;
-    Map<String, Bitmap> mBitmaps;
+    Map<String, Bitmap> mBitmaps = new HashMap<>();
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -69,9 +65,7 @@ public class MainActivity extends AppCompatActivity
                         "Please wait retriving the information",
                         Toast.LENGTH_LONG).show();
             }
-            getSupportLoaderManager().initLoader(0, null, MainActivity.this)
-                    .forceLoad();
-
+            displayDataItems(null);
         }
     };
 
@@ -83,7 +77,7 @@ public class MainActivity extends AppCompatActivity
         networkOk = NetworkHelper.hasNetworkAccess(this);
         //      Code to manage sliding navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mCategories = getResources().getStringArray(R.array.categories);
+        mCategories = getResources().getStringArray(R.array.colour);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.drawer_list_item, mCategories));
@@ -113,8 +107,12 @@ public class MainActivity extends AppCompatActivity
 
     private void runIntent(){
         if (networkOk) {
+
+            RequestPackage requestPackage = new RequestPackage();
+            requestPackage.setEndPoint(JSON_URL);
+            requestPackage.setParam("colour", "blue");
             Intent intent = new Intent(this, MyService.class);
-            intent.setData(Uri.parse(JSON_URL));
+            intent.putExtra(MyService.REQUEST_PACKAGE, requestPackage);
             startService(intent);
         } else {
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
@@ -124,6 +122,40 @@ public class MainActivity extends AppCompatActivity
     private void displayDataItems(String category) {
         if (cartItemsList != null) {
             mCartItemAdapter = new CartItemAdapter(this, cartItemsList, mBitmaps);
+            mRecyclerView.setAdapter(mCartItemAdapter);
+        }
+    }
+
+    private void filterByColour(final String colour) {
+
+        List<CartItems> cartItemsListByColour = new ArrayList<>();
+        for (int position = 0; position < cartItemsList.size(); position++) {
+            if (cartItemsList.get(position).getColour().equals(colour)){
+                cartItemsListByColour.add(cartItemsList.get(position));
+            }
+        }
+        Toast.makeText(MainActivity.this,
+                "Filtered to " + cartItemsListByColour.size() + " items from the service",
+                Toast.LENGTH_LONG).show();
+        if (cartItemsListByColour != null) {
+            mCartItemAdapter = new CartItemAdapter(this, cartItemsListByColour, mBitmaps);
+            mRecyclerView.setAdapter(mCartItemAdapter);
+        }
+    }
+
+    private void filterBySize(final String size) {
+
+        List<CartItems> cartItemsListBySize = new ArrayList<>();
+        for (int position = 0; position < cartItemsList.size(); position++) {
+            if (cartItemsList.get(position).getSize().equals(size)){
+                cartItemsListBySize.add(cartItemsList.get(position));
+            }
+        }
+        Toast.makeText(MainActivity.this,
+                "Filtered to " + cartItemsListBySize.size() + " items from the service",
+                Toast.LENGTH_LONG).show();
+        if (cartItemsListBySize != null) {
+            mCartItemAdapter = new CartItemAdapter(this, cartItemsListBySize, mBitmaps);
             mRecyclerView.setAdapter(mCartItemAdapter);
         }
     }
@@ -157,61 +189,6 @@ public class MainActivity extends AppCompatActivity
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public Loader<Map<String, Bitmap>> onCreateLoader(int id, Bundle args) {
-        return new ImageDownloader(this, cartItemsList);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Map<String, Bitmap>> loader, Map<String, Bitmap> data) {
-        mBitmaps = data;
-        displayDataItems(null);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Map<String, Bitmap>> loader) {
-
-    }
-
-    private static class ImageDownloader
-            extends AsyncTaskLoader<Map<String, Bitmap>> {
-
-        private static List<CartItems> cartItemsList;
-
-        public ImageDownloader(Context context, List<CartItems> itemList) {
-            super(context);
-            cartItemsList = itemList;
-        }
-
-        @Override
-        public Map<String, Bitmap> loadInBackground() {
-            //download image files here
-
-            Map<String, Bitmap> map = new HashMap<>();
-            for (CartItems cartItems: cartItemsList
-                 ) {
-                String imageURL = cartItems.getPicture();
-                InputStream in = null;
-
-                try {
-                    in = (InputStream) new URL(imageURL).getContent();
-                    Bitmap bitmap = BitmapFactory.decodeStream(in);
-                    map.put(cartItems.getName(), bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-            return map;
         }
     }
 }

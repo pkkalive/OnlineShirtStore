@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItems;
-import com.kumar.shirtstore.utils.HttpHelper;
+import com.kumar.shirtstore.utils.RequestPackage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import java.util.Map;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder> {
 
+    public static final String TAG = "CartItemAdapter";
     public static final String ITEM_ID_KEY = "item_id_key";
     public static final String ITEM_KEY = "item_key";
     private List<CartItems> mItems;
@@ -43,7 +45,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         this.mItems = items;
         this.mBitmaps = bitmaps;
     }
-
 
     @Override
     public CartItemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -69,18 +70,24 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         return viewHolder;
     }
 
+
+
+
     @Override
     public void onBindViewHolder(CartItemAdapter.ViewHolder holder, int position) {
         final CartItems item = mItems.get(position);
 
+
         try {
             holder.tvName.setText(item.getName());
-//            String imageFile = item.getPicture();
-//            InputStream inputStream = mContext.getAssets().open(imageFile);
-//            Drawable d = Drawable.createFromStream(inputStream, null);
-            Bitmap bitmap = mBitmaps.get(item.getName());
-            holder.imageView.setImageBitmap(bitmap);
-
+            if (mBitmaps.containsKey(item.getName())){
+                Bitmap bitmap = mBitmaps.get(item.getName());
+                holder.imageView.setImageBitmap(bitmap);
+            } else {
+                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
+                imageDownloadTask.setViewHolder(holder);
+                imageDownloadTask.execute(item);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,37 +137,43 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         }
     }
 
-//    private class ExtractImage extends AsyncTask<String, Void, Bitmap> {
-//        @Override
-//        protected Bitmap doInBackground(String... urls) {
-//            Bitmap map = null;
-//            for (String url : urls) {
-//                map = downloadImage(url);
-//            }
-//            return map;
-//        }
-//
-//        // Sets the Bitmap returned by doInBackground
-//        @Override
-//        protected void onPostExecute(Bitmap result) {
-//            imageView.setImageBitmap(result);
-//        }
-//
-//        // Creates Bitmap from InputStream and returns it
-//        private Bitmap downloadImage(String url) {
-//            Bitmap bitmap = null;
-//            InputStream stream = null;
-//            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-//            bmOptions.inSampleSize = 1;
-//            try {
-//                stream = HttpHelper.getImage(url);
-//                bitmap = BitmapFactory.
-//                        decodeStream(stream, null, bmOptions);
-//                stream.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return bitmap;
-//        }
-//    }
+    private class ImageDownloadTask extends AsyncTask<CartItems, Void, Bitmap> {
+        private CartItems cartItems;
+        private ViewHolder mHolder;
+
+        public void setViewHolder(ViewHolder holder) {
+            mHolder = holder;
+        }
+
+        @Override
+        protected Bitmap doInBackground(CartItems... dataItems) {
+
+            cartItems = dataItems[0];
+            String imageUrl = cartItems.getPicture();
+            InputStream in = null;
+
+            try {
+                in = (InputStream) new URL(imageUrl).getContent();
+                return BitmapFactory.decodeStream(in);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            mHolder.imageView.setImageBitmap(bitmap);
+            mBitmaps.put(cartItems.getName(), bitmap);
+        }
+    }
 }

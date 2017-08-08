@@ -1,12 +1,13 @@
 package com.kumar.shirtstore.utils;
 
+import android.util.Log;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Created by Purushotham on 07/08/17.
@@ -20,11 +21,21 @@ public class HttpHelper {
     /**
      * Returns text from a URL on a web server
      *
-     * @param address
+     * @param requestPackage
      * @return
      * @throws IOException
      */
-    public static String downloadUrl(String address) throws IOException {
+    public static String downloadFromFeed (RequestPackage requestPackage)
+            throws IOException {
+
+        String address = requestPackage.getEndpoint();
+        String encodedParams = requestPackage.getEncodedParams();
+
+        if (requestPackage.getMethod().equals("GET") &&
+                encodedParams.length() > 0) {
+            address = String.format("%s?%s", address, encodedParams);
+        }
+//        Log.i("address is ", "downloadFromFeed: " +address);
 
         InputStream is = null;
         try {
@@ -33,7 +44,7 @@ public class HttpHelper {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod(requestPackage.getMethod());
             conn.setDoInput(true);
             conn.connect();
 
@@ -83,27 +94,4 @@ public class HttpHelper {
             }
         }
     }
-
-    // Makes HttpURLConnection and returns InputStream
-    
-    public static InputStream getImage(String imageURL)
-            throws IOException {
-        InputStream stream = null;
-        URL url = new URL(imageURL);
-        URLConnection connection = url.openConnection();
-
-        try {
-            HttpURLConnection httpConnection = (HttpURLConnection) connection;
-            httpConnection.setRequestMethod("GET");
-            httpConnection.connect();
-
-            if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                stream = httpConnection.getInputStream();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return stream;
-    }
-
 }
