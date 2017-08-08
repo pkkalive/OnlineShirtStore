@@ -194,7 +194,6 @@ public class MainActivity extends AppCompatActivity
             for (CartItems cartItems: cartItemsList
                  ) {
                 String imageURL = cartItems.getPicture();
-                Log.i("Image URL is ", "loadInBackground: " + imageURL);
                 InputStream in = null;
 
                 try {
