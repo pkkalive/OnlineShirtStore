@@ -19,11 +19,20 @@ public class HttpHelper {
     /**
      * Returns text from a URL on a web server
      *
-     * @param address
+     * @param requestPackage
      * @return
      * @throws IOException
      */
-    public static String downloadUrl(String address) throws IOException {
+    public static String downloadFromFeed (RequestPackage requestPackage)
+            throws IOException {
+
+        String address = requestPackage.getEndpoint();
+        String encodedParams = requestPackage.getEncodedParams();
+
+        if (requestPackage.getMethod().equals("GET") &&
+                encodedParams.length() >0 ){
+            address = String.format("%s?%s", address, encodedParams);
+        }
 
         InputStream is = null;
         try {
@@ -32,7 +41,7 @@ public class HttpHelper {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod(requestPackage.getMethod());
             conn.setDoInput(true);
             conn.connect();
 

@@ -27,6 +27,7 @@ import com.kumar.shirtstore.interfaces.HttpUrl;
 import com.kumar.shirtstore.model.CartItems;
 import com.kumar.shirtstore.service.MyService;
 import com.kumar.shirtstore.utils.NetworkHelper;
+import com.kumar.shirtstore.utils.RequestPackage;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -103,8 +104,13 @@ public class MainActivity extends AppCompatActivity
 
     private void runIntent(){
         if (networkOk) {
+
+            RequestPackage requestPackage = new RequestPackage();
+            requestPackage.setEndPoint(JSON_URL);
+            requestPackage.setParam("categories", "blue");
+
             Intent intent = new Intent(this, MyService.class);
-            intent.setData(Uri.parse(JSON_URL));
+            intent.putExtra(MyService.REQUEST_PACKAGE, requestPackage);
             startService(intent);
         } else {
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
