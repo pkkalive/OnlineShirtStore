@@ -4,13 +4,23 @@
 
     <group android:checkableBehavior="single">
         <item android:id="@+id/filter_by_size"
-            android:title="@string/filter_by_size" />
-        <item android:id="@+id/filter_by_color"
-            android:title="@string/filter_by_color" />
+            android:title="@string/filter_by_size"
+            android:icon="@drawable/ic_search"
+            app:showAsAction="collapseActionView|ifRoom"
+            android:actionViewClass="android.widget.SearchView" />
+
+
+        <item android:id="@+id/filter_by_colour"
+            android:title="@string/filter_by_color"
+            android:icon="@drawable/ic_search"
+            app:showAsAction="collapseActionView|ifRoom"
+            android:actionViewClass="android.widget.SearchView" />
     </group>
 
     <item android:id="@+id/shopping_cart"
         android:icon="@drawable/add_shopping_cart"
         android:title="@string/add_shopping_cart"
         app:showAsAction="ifRoom"/>
+
+
 </menu>

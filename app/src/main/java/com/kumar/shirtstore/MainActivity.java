@@ -2,25 +2,26 @@ package com.kumar.shirtstore;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,10 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity
-        implements HttpUrl  {
+public class MainActivity extends AppCompatActivity implements HttpUrl  {
 
-    public static final String TAG = "MainActivity";
     boolean networkOk;
     List<CartItems> cartItemsList;
     DrawerLayout mDrawerLayout;
@@ -174,18 +173,56 @@ public class MainActivity extends AppCompatActivity
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.filter_by_size:
-                Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.filter_by_color:
-                Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                return true;
             case R.id.shopping_cart:
                 Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.filter_by_colour:
+                Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("Filter by color");
+                alert.setMessage("please enter your desired colour");
+                final EditText input = new EditText(this);
+                alert.setView(input);
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String filterByColour = input.getEditableText().toString();
+                        filterByColour(filterByColour);
+                    }
+                });
+                alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog dialog = alert.create();
+                dialog.show();
+                return true;
+
+            case R.id.filter_by_size:
+                Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Filter by size");
+                builder.setMessage("Please enter your desired size");
+                final EditText text = new EditText(this);
+                builder.setView(text);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String filterBySize = text.getEditableText().toString();
+                        filterBySize(filterBySize);
+                    }
+                });
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
