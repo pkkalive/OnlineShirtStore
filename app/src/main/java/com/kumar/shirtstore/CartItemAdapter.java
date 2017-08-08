@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItems;
+import com.kumar.shirtstore.utils.ImageCacheManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,6 +71,14 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
         try {
             holder.tvName.setText(item.getName());
+            Bitmap bitmap = ImageCacheManager.getBitmap(mContext, item);
+            if (bitmap == null) {
+                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
+                imageDownloadTask.setViewHolder(holder);
+                imageDownloadTask.execute(item);
+            } else {
+                holder.imageView.setImageBitmap(bitmap);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,7 +165,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             mHolder.imageView.setImageBitmap(bitmap);
-            mBitmaps.put(cartItems.getName(), bitmap);
+            ImageCacheManager.putBitmap(mContext, cartItems, bitmap);
         }
     }
 }

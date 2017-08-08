@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity
     String[] mCategories;
     RecyclerView mRecyclerView;
     CartItemAdapter mCartItemAdapter;
-    Map<String, Bitmap> mBitmaps = new HashMap<>();
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity
 
     private void displayDataItems(String category) {
         if (cartItemsList != null) {
-            mCartItemAdapter = new CartItemAdapter(this, cartItemsList, mBitmaps);
+            mCartItemAdapter = new CartItemAdapter(this, cartItemsList);
             mRecyclerView.setAdapter(mCartItemAdapter);
         }
     }
