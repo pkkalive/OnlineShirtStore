@@ -10,7 +10,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.kumar.shirtstore.model.CartItems;
 import com.kumar.shirtstore.utils.HttpHelper;
-import com.kumar.shirtstore.utils.RequestPackage;
 
 import java.io.IOException;
 
