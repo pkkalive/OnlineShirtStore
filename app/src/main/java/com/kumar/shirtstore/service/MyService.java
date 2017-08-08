@@ -47,9 +47,6 @@ public class MyService extends IntentService {
         LocalBroadcastManager manager =
                 LocalBroadcastManager.getInstance(getApplicationContext());
         manager.sendBroadcast(messageIntent);
-
-
-
     }
 
     @Override

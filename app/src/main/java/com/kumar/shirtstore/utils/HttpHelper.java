@@ -83,27 +83,4 @@ public class HttpHelper {
             }
         }
     }
-
-    // Makes HttpURLConnection and returns InputStream
-    
-    public static InputStream getImage(String imageURL)
-            throws IOException {
-        InputStream stream = null;
-        URL url = new URL(imageURL);
-        URLConnection connection = url.openConnection();
-
-        try {
-            HttpURLConnection httpConnection = (HttpURLConnection) connection;
-            httpConnection.setRequestMethod("GET");
-            httpConnection.connect();
-
-            if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                stream = httpConnection.getInputStream();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return stream;
-    }
-
 }

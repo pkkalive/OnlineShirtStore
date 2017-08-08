@@ -44,7 +44,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         this.mBitmaps = bitmaps;
     }
 
-
     @Override
     public CartItemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -126,38 +125,4 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             mView = itemView;
         }
     }
-
-//    private class ExtractImage extends AsyncTask<String, Void, Bitmap> {
-//        @Override
-//        protected Bitmap doInBackground(String... urls) {
-//            Bitmap map = null;
-//            for (String url : urls) {
-//                map = downloadImage(url);
-//            }
-//            return map;
-//        }
-//
-//        // Sets the Bitmap returned by doInBackground
-//        @Override
-//        protected void onPostExecute(Bitmap result) {
-//            imageView.setImageBitmap(result);
-//        }
-//
-//        // Creates Bitmap from InputStream and returns it
-//        private Bitmap downloadImage(String url) {
-//            Bitmap bitmap = null;
-//            InputStream stream = null;
-//            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-//            bmOptions.inSampleSize = 1;
-//            try {
-//                stream = HttpHelper.getImage(url);
-//                bitmap = BitmapFactory.
-//                        decodeStream(stream, null, bmOptions);
-//                stream.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return bitmap;
-//        }
-//    }
 }
