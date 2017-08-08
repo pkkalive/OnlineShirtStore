@@ -9,11 +9,19 @@
     <string name="add_shopping_cart">Shopping Cart</string>
     <string name="pref_display_grid">pref_display_grid</string>
     <string-array
-        name="categories">
+        name="colour">
         <item>brown</item>
         <item>green</item>
         <item>blue</item>
         <item>black</item>
+        <item>string</item>
+    </string-array>
+    <string-array
+        name="size">
+        <item>m</item>
+        <item>1</item>
+        <item>s</item>
+        <item>x-large</item>
         <item>string</item>
     </string-array>
 </resources>
