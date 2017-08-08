@@ -65,8 +65,7 @@ public class MainActivity extends AppCompatActivity
                         "Please wait retriving the information",
                         Toast.LENGTH_LONG).show();
             }
-//            displayDataItems(null);
-            filterByColour("blue");
+            displayDataItems(null);
         }
     };
 
