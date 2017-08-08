@@ -23,7 +23,11 @@ public class HttpHelper {
      * @return
      * @throws IOException
      */
-    public static String downloadUrl(String address) throws IOException {
+    public static String downloadFromFeed (RequestPackage requestPackage)
+            throws IOException {
+
+        String address = requestPackage.getEndpoint();
+        String encodedParams = requestPackage.getEncodedParams();
 
         InputStream is = null;
         try {
