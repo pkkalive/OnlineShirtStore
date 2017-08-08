@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Purushotham on 07/08/17.
@@ -71,14 +70,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
         try {
             holder.tvName.setText(item.getName());
-            if (mBitmaps.containsKey(item.getName())){
-                Bitmap bitmap = mBitmaps.get(item.getName());
-                holder.imageView.setImageBitmap(bitmap);
-            } else {
-                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
-                imageDownloadTask.setViewHolder(holder);
-                imageDownloadTask.execute(item);
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
