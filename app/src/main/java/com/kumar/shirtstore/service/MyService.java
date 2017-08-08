@@ -23,7 +23,6 @@ public class MyService extends IntentService {
     public static final String TAG = "MyService";
     public static final String MY_SERVICE_MESSAGE = "MyServiceMessage";
     public static final String MY_SERVICE_PAYLOAD = "MyServicePayload";
-    public static final String REQUEST_PACKAGE = "requestPackage";
 
     public MyService() {
         super("MyService");
@@ -31,12 +30,12 @@ public class MyService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-
-        RequestPackage requestPackage = (RequestPackage)
-                intent.getParcelableExtra(REQUEST_PACKAGE);
+        Uri uri = intent.getData();
+        Log.i(TAG, "onHandleIntent: " + uri.toString());
         String response;
+
         try {
-            response = HttpHelper.downloadFromFeed(requestPackage);
+            response = HttpHelper.downloadUrl(uri.toString());
         } catch (IOException e) {
             e.printStackTrace();
             return;

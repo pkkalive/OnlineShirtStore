@@ -34,8 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity
-        implements HttpUrl  {
+public class MainActivity extends AppCompatActivity implements HttpUrl {
 
     boolean networkOk;
     List<CartItems> cartItemsList;
@@ -44,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     String[] mCategories;
     RecyclerView mRecyclerView;
     CartItemAdapter mCartItemAdapter;
+    Map<String, Bitmap> mBitmaps;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -103,15 +103,8 @@ public class MainActivity extends AppCompatActivity
 
     private void runIntent(){
         if (networkOk) {
-
-            RequestPackage requestPackage = new RequestPackage();
-            requestPackage.setEndPoint(JSON_URL);
-            requestPackage.setParam("categories", "blue");
-
-
             Intent intent = new Intent(this, MyService.class);
-//            intent.setData(Uri.parse(JSON_URL));
-            intent.putExtra(MyService.REQUEST_PACKAGE, requestPackage);
+            intent.setData(Uri.parse(JSON_URL));
             startService(intent);
         } else {
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
@@ -120,7 +113,7 @@ public class MainActivity extends AppCompatActivity
 
     private void displayDataItems(String category) {
         if (cartItemsList != null) {
-            mCartItemAdapter = new CartItemAdapter(this, cartItemsList);
+            mCartItemAdapter = new CartItemAdapter(this, cartItemsList, mBitmaps);
             mRecyclerView.setAdapter(mCartItemAdapter);
         }
     }

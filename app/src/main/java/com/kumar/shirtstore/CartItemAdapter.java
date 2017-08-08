@@ -17,12 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItems;
-import com.kumar.shirtstore.utils.ImageCacheManager;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Purushotham on 07/08/17.
@@ -30,15 +31,18 @@ import java.util.List;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder> {
 
+    public static final String TAG = "CartItemAdapter";
     public static final String ITEM_ID_KEY = "item_id_key";
     public static final String ITEM_KEY = "item_key";
     private List<CartItems> mItems;
+    private Map<String, Bitmap> mBitmaps;
     private Context mContext;
     private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
 
-    public CartItemAdapter(Context context, List<CartItems> items) {
+    public CartItemAdapter(Context context, List<CartItems> items, Map<String, Bitmap> bitmaps) {
         this.mContext = context;
         this.mItems = items;
+        this.mBitmaps = bitmaps;
     }
 
     @Override
@@ -71,15 +75,17 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
         try {
             holder.tvName.setText(item.getName());
-            Bitmap bitmap = ImageCacheManager.getBitmap(mContext, item);
-            if (bitmap == null) {
-                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
-                imageDownloadTask.setViewHolder(holder);
-                imageDownloadTask.execute(item);
-            } else {
-                holder.imageView.setImageBitmap(bitmap);
-            }
-
+            Bitmap bitmap = mBitmaps.get(item.getName());
+            holder.imageView.setImageBitmap(bitmap);
+//            Log.i(TAG, "onBindViewHolder: " + mBitmaps.containsKey(item.getName()));
+//            if (mBitmaps.containsKey(item.getName())){
+//                Bitmap bitmap = mBitmaps.get(item.getName());
+//                holder.imageView.setImageBitmap(bitmap);
+//            } else {
+//                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
+//                imageDownloadTask.setViewHolder(holder);
+//                imageDownloadTask.execute(item);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -165,7 +171,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             mHolder.imageView.setImageBitmap(bitmap);
-            ImageCacheManager.putBitmap(mContext, cartItems, bitmap);
+            mBitmaps.put(cartItems.getName(), bitmap);
         }
     }
 }
