@@ -17,10 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItems;
+import com.kumar.shirtstore.utils.RequestPackage;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +32,7 @@ import java.util.Map;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder> {
 
+    public static final String TAG = "CartItemAdapter";
     public static final String ITEM_ID_KEY = "item_id_key";
     public static final String ITEM_KEY = "item_key";
     private List<CartItems> mItems;
@@ -67,9 +70,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         return viewHolder;
     }
 
+
+
+
     @Override
     public void onBindViewHolder(CartItemAdapter.ViewHolder holder, int position) {
         final CartItems item = mItems.get(position);
+
 
         try {
             holder.tvName.setText(item.getName());

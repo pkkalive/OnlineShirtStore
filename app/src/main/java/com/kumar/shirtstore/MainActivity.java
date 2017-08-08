@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import com.kumar.shirtstore.service.MyService;
 import com.kumar.shirtstore.utils.NetworkHelper;
 import com.kumar.shirtstore.utils.RequestPackage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +39,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity
         implements HttpUrl  {
 
+    public static final String TAG = "MainActivity";
     boolean networkOk;
     List<CartItems> cartItemsList;
     DrawerLayout mDrawerLayout;
@@ -62,7 +65,8 @@ public class MainActivity extends AppCompatActivity
                         "Please wait retriving the information",
                         Toast.LENGTH_LONG).show();
             }
-            displayDataItems(null);
+//            displayDataItems(null);
+            filterByColour("blue");
         }
     };
 
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity
         networkOk = NetworkHelper.hasNetworkAccess(this);
         //      Code to manage sliding navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mCategories = getResources().getStringArray(R.array.categories);
+        mCategories = getResources().getStringArray(R.array.colour);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.drawer_list_item, mCategories));
@@ -107,8 +111,7 @@ public class MainActivity extends AppCompatActivity
 
             RequestPackage requestPackage = new RequestPackage();
             requestPackage.setEndPoint(JSON_URL);
-            requestPackage.setParam("categories", "blue");
-
+            requestPackage.setParam("colour", "blue");
             Intent intent = new Intent(this, MyService.class);
             intent.putExtra(MyService.REQUEST_PACKAGE, requestPackage);
             startService(intent);
@@ -120,6 +123,40 @@ public class MainActivity extends AppCompatActivity
     private void displayDataItems(String category) {
         if (cartItemsList != null) {
             mCartItemAdapter = new CartItemAdapter(this, cartItemsList, mBitmaps);
+            mRecyclerView.setAdapter(mCartItemAdapter);
+        }
+    }
+
+    private void filterByColour(final String colour) {
+
+        List<CartItems> cartItemsListByColour = new ArrayList<>();
+        for (int position = 0; position < cartItemsList.size(); position++) {
+            if (cartItemsList.get(position).getColour().equals(colour)){
+                cartItemsListByColour.add(cartItemsList.get(position));
+            }
+        }
+        Toast.makeText(MainActivity.this,
+                "Filtered to " + cartItemsListByColour.size() + " items from the service",
+                Toast.LENGTH_LONG).show();
+        if (cartItemsListByColour != null) {
+            mCartItemAdapter = new CartItemAdapter(this, cartItemsListByColour, mBitmaps);
+            mRecyclerView.setAdapter(mCartItemAdapter);
+        }
+    }
+
+    private void filterBySize(final String size) {
+
+        List<CartItems> cartItemsListBySize = new ArrayList<>();
+        for (int position = 0; position < cartItemsList.size(); position++) {
+            if (cartItemsList.get(position).getSize().equals(size)){
+                cartItemsListBySize.add(cartItemsList.get(position));
+            }
+        }
+        Toast.makeText(MainActivity.this,
+                "Filtered to " + cartItemsListBySize.size() + " items from the service",
+                Toast.LENGTH_LONG).show();
+        if (cartItemsListBySize != null) {
+            mCartItemAdapter = new CartItemAdapter(this, cartItemsListBySize, mBitmaps);
             mRecyclerView.setAdapter(mCartItemAdapter);
         }
     }

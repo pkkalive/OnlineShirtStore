@@ -1,5 +1,7 @@
 package com.kumar.shirtstore.utils;
 
+import android.util.Log;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,9 +32,10 @@ public class HttpHelper {
         String encodedParams = requestPackage.getEncodedParams();
 
         if (requestPackage.getMethod().equals("GET") &&
-                encodedParams.length() >0 ){
+                encodedParams.length() > 0) {
             address = String.format("%s?%s", address, encodedParams);
         }
+//        Log.i("address is ", "downloadFromFeed: " +address);
 
         InputStream is = null;
         try {
