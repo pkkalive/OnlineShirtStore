@@ -1,0 +1,159 @@
+package com.kumar.shirtstore;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.kumar.shirtstore.model.CartItems;
+import com.kumar.shirtstore.utils.HttpHelper;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+/**
+ * Created by Purushotham on 07/08/17.
+ */
+
+public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder> {
+
+    public static final String ITEM_ID_KEY = "item_id_key";
+    public static final String ITEM_KEY = "item_key";
+    private List<CartItems> mItems;
+    private Context mContext;
+    private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
+
+    public CartItemAdapter(Context context, List<CartItems> items) {
+        this.mContext = context;
+        this.mItems = items;
+    }
+    public static ImageView imageView;
+
+    @Override
+    public CartItemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        SharedPreferences settings =
+                PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                                  String key) {
+                Log.i("preferences", "onSharedPreferenceChanged: " + key);
+            }
+        };
+        settings.registerOnSharedPreferenceChangeListener(prefsListener);
+
+        boolean grid = settings.getBoolean(
+                mContext.getString(R.string.pref_display_grid), false);
+        int layoutId = grid ? R.layout.grid_item : R.layout.list_item;
+
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View itemView = inflater.inflate(layoutId, parent, false);
+        ViewHolder viewHolder = new ViewHolder(itemView);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(CartItemAdapter.ViewHolder holder, int position) {
+        final CartItems item = mItems.get(position);
+
+        try {
+            holder.tvName.setText(item.getName());
+            String imageFile = item.getPicture();
+            ExtractImage extractImage = new ExtractImage();
+            extractImage.execute(imageFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.putExtra(ITEM_KEY, item);
+                mContext.startActivity(intent);
+            }
+        });
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(mContext, "You long clicked " + item.getName(),
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        if (mItems != null){
+            return mItems.size();
+        } else {
+            return 0;
+        }
+
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView tvName;
+        public View mView;
+
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            tvName = (TextView) itemView.findViewById(R.id.itemNameText);
+            imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            mView = itemView;
+        }
+    }
+
+    private class ExtractImage extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            Bitmap map = null;
+            for (String url : urls) {
+                map = downloadImage(url);
+            }
+            return map;
+        }
+
+        // Sets the Bitmap returned by doInBackground
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
+
+        // Creates Bitmap from InputStream and returns it
+        private Bitmap downloadImage(String url) {
+            Bitmap bitmap = null;
+            InputStream stream = null;
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inSampleSize = 1;
+            try {
+                stream = HttpHelper.getImage(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+    }
+}
