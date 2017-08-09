@@ -86,6 +86,8 @@ public class DetailActivity extends AppCompatActivity {
                 menu.getItem(i).setVisible(false);
             } else if (menu.getItem(i).getItemId() == R.id.filter_by_colour) {
                 menu.getItem(i).setVisible(false);
+            } else if (menu.getItem(i).getItemId() == R.id.action_settings) {
+                menu.getItem(i).setVisible(false);
             }
         }
         return true;
@@ -97,11 +99,6 @@ public class DetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.shopping_cart:
                 Toast.makeText(DetailActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.action_settings:
-                // Show the settings screen
-                Intent settingsIntent = new Intent(this, PrefsActivity.class);
-                startActivity(settingsIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
