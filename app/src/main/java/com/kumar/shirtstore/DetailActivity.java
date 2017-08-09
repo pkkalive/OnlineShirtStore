@@ -1,20 +1,32 @@
 package com.kumar.shirtstore;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItems;
+import com.kumar.shirtstore.model.CartItemsList;
+import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import static com.kumar.shirtstore.service.MyService.ITEM_ID_KEY;
 
 /**
  * Created by Purushotham on 08/08/17.
@@ -24,7 +36,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private TextView tvName, tvDescription, tvPrice;
     private ImageView itemImage;
+    private Button addCart, viewCart;
     CartItems item;
+    CartItemsList cartItemsLists = new CartItemsList();
+    Intent intent ;
+    Bundle mBundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,39 +64,102 @@ public class DetailActivity extends AppCompatActivity {
         NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.getDefault());
         tvPrice.setText(nf.format(item.getPrice()));
 
-        ImageLoader imageDownloadTask = new ImageLoader();
-        imageDownloadTask.execute(item);
+        String imageURL = item.getPicture();
+        Picasso.with(this)
+                .load(imageURL)
+                .resize(50, 50)
+                .into(itemImage);
 
+        addCart = (Button) findViewById(R.id.addCart);
+        addCart.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+                addCart();
+            }
+        });
+
+        viewCart = (Button) findViewById(R.id.viewCart);
+        viewCart.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+                viewCart();
+            }
+        });
     }
 
-    private class ImageLoader extends AsyncTask<CartItems, Void, Bitmap> {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        for (int i = 0; i < menu.size(); i++){
+            if (menu.getItem(i).getItemId() == R.id.filter_by_size){
+                menu.getItem(i).setVisible(false);
+            } else if (menu.getItem(i).getItemId() == R.id.filter_by_colour) {
+                menu.getItem(i).setVisible(false);
+            } else if (menu.getItem(i).getItemId() == R.id.action_settings) {
+                menu.getItem(i).setVisible(false);
+            }
+        }
+        return true;
+    }
 
-        @Override
-        protected Bitmap doInBackground(CartItems... dataItems) {
-            InputStream in = null;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.shopping_cart:
+                Toast.makeText(DetailActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-            try {
-                String imageUrl = item.getPicture();
-                in = (InputStream) new URL(imageUrl).getContent();
-                return BitmapFactory.decodeStream(in);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+    private void addCart(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add number of shirts");
+        builder.setMessage("Please enter your desired shirts");
+        final EditText text = new EditText(this);
+        text.setInputType(InputType.TYPE_CLASS_NUMBER);
+        text.setRawInputType(Configuration.KEYBOARD_12KEY);
+        builder.setView(text);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String quantity = text.getEditableText().toString();
+                Toast.makeText(DetailActivity.this, "Quantity is " + Integer.parseInt(quantity),
+                        Toast.LENGTH_SHORT).show();
+                if (quantity.isEmpty()){
+                    Toast.makeText(DetailActivity.this, " You haven't selected any number of shirts",
+                            Toast.LENGTH_SHORT).show();
+                    dialog.cancel();
+                } else {
+                    cartItemsLists.setId(item.getId());
+                    cartItemsLists.setName(item.getName());
+                    cartItemsLists.setColour(item.getColour());
+                    cartItemsLists.setQuantity(Integer.parseInt(quantity));
+                    cartItemsLists.setPrice(item.getPrice());
+
+                    mBundle.putParcelable(ITEM_ID_KEY, cartItemsLists);
+                    Toast.makeText(DetailActivity.this, quantity + " " + item.getName()
+                                    + " shirts added in your cart",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
-            return null;
-        }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            itemImage.setImageBitmap(bitmap);
-        }
+    private void viewCart(){
+        Toast.makeText(DetailActivity.this, "You chose to view your cart",
+                Toast.LENGTH_SHORT).show();
+        intent = new Intent(DetailActivity.this, ShoppingCart.class);
+        intent.putExtras(mBundle);
+        startActivity(intent);
     }
 }
