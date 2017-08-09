@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
                 Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setTitle("Filter by color");
-                alert.setMessage("please enter your desired colour");
+                alert.setMessage("please enter your desired shirt colour");
                 final EditText input = new EditText(this);
                 alert.setView(input);
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
                 Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Filter by size");
-                builder.setMessage("Please enter your desired size");
+                builder.setMessage("Please enter your desired shirt size");
                 final EditText text = new EditText(this);
                 builder.setView(text);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
