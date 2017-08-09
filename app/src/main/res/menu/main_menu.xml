@@ -5,15 +5,15 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/filter_by_size"
             android:title="@string/filter_by_size"
-            android:icon="@drawable/ic_search"
-            app:showAsAction="collapseActionView|ifRoom"
+            android:icon="@drawable/filter_by_size"
+            app:showAsAction="collapseActionView|always"
             android:actionViewClass="android.widget.SearchView" />
 
 
         <item android:id="@+id/filter_by_colour"
             android:title="@string/filter_by_color"
-            android:icon="@drawable/ic_search"
-            app:showAsAction="collapseActionView|ifRoom"
+            android:icon="@drawable/filter_by_colour"
+            app:showAsAction="collapseActionView|always"
             android:actionViewClass="android.widget.SearchView" />
     </group>
 
