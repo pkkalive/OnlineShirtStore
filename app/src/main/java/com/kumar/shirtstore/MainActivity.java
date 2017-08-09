@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.kumar.shirtstore.interfaces.HttpUrl;
 import com.kumar.shirtstore.model.CartItems;
+import com.kumar.shirtstore.model.CartItemsList;
 import com.kumar.shirtstore.service.MyService;
 import com.kumar.shirtstore.utils.NetworkHelper;
 import com.kumar.shirtstore.utils.RequestPackage;
@@ -34,8 +36,17 @@ import com.kumar.shirtstore.utils.RequestPackage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+
+import static com.kumar.shirtstore.service.MyService.ITEM_ID_KEY;
+import static com.kumar.shirtstore.service.MyService.KEY;
+import static com.kumar.shirtstore.service.MyService.SAVED_CART;
 
 public class MainActivity extends AppCompatActivity implements HttpUrl  {
 
@@ -73,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.rvItems);
         networkOk = NetworkHelper.hasNetworkAccess(this);
         //      Code to manage sliding navigation drawer
@@ -117,6 +129,27 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
         } else {
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void shoppingCart(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SAVED_CART, Context.MODE_PRIVATE);
+        Bundle bundle = new Bundle();
+        if (sharedPreferences.getInt("id", -1) == -1) {
+            Toast.makeText(this, "No previous saved cart", Toast.LENGTH_SHORT).show();
+        } else {
+            CartItemsList cartItemsLists = new CartItemsList();
+            cartItemsLists.setId(sharedPreferences.getInt("id", -1));
+            cartItemsLists.setName(sharedPreferences.getString("name", ""));
+            cartItemsLists.setColour(sharedPreferences.getString("colour",""));
+            cartItemsLists.setQuantity(sharedPreferences.getInt("quantity", -1));
+            cartItemsLists.setPrice(Double.parseDouble(sharedPreferences.getString("price", "0")));
+
+            bundle.putParcelable(ITEM_ID_KEY, cartItemsLists);
+            Intent intent = new Intent(MainActivity.this, ShoppingCart.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+
     }
 
     private void displayDataItems(String category) {
@@ -192,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
         switch (item.getItemId()) {
             case R.id.shopping_cart:
                 Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                shoppingCart();
                 return true;
             case R.id.action_settings:
                 // Show the settings screen

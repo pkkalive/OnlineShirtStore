@@ -1,15 +1,17 @@
 package com.kumar.shirtstore;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItemsList;
 import com.kumar.shirtstore.service.MyService;
 
-import java.util.List;
 
 /**
  * Created by Purushotham on 09/08/17.
@@ -21,7 +23,7 @@ public class ShoppingCart extends AppCompatActivity {
     CartItemsList cartItemsLists;
     double price, totalPrice;
     int quantity, totalQuantity;
-    List<CartItemsList> mcartItemsList;
+    private ImageButton removeItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,15 @@ public class ShoppingCart extends AppCompatActivity {
         itemQuantity = (TextView) findViewById(R.id.cartQuantity);
         totalItemQuantity = (TextView) findViewById(R.id.totalItemQuantity);
         totalItemPrice = (TextView) findViewById(R.id.totalItemPrice);
+        removeItem = (ImageButton) findViewById(R.id.cart_minus_img);
+        removeItem.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Toast.makeText(ShoppingCart.this, "you have removed the item", Toast.LENGTH_SHORT).show();
+                removeCartItem();
+            }
+
+        });
         displayCart();
     }
     private void displayCart(){
@@ -51,8 +62,18 @@ public class ShoppingCart extends AppCompatActivity {
 
             totalPrice = cartItemsLists.getPrice() * quantity;
             totalItemPrice.setText(totalPrice + "");
-
         }
 
+    }
+
+    private void removeCartItem(){
+        itemName.setText("");
+        itemPrice.setText(0+"");
+        quantity = 0;
+        itemQuantity.setText(quantity + "");
+        totalQuantity = 0;
+        totalItemQuantity.setText(totalQuantity +"");
+        totalPrice = cartItemsLists.getPrice() * quantity;
+        totalItemPrice.setText(totalPrice + "");
     }
 }

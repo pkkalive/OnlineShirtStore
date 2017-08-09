@@ -1,10 +1,11 @@
 package com.kumar.shirtstore;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -24,9 +25,13 @@ import com.kumar.shirtstore.model.CartItemsList;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 import static com.kumar.shirtstore.service.MyService.ITEM_ID_KEY;
+import static com.kumar.shirtstore.service.MyService.KEY;
+import static com.kumar.shirtstore.service.MyService.SAVED_CART;
 
 /**
  * Created by Purushotham on 08/08/17.
@@ -41,6 +46,7 @@ public class DetailActivity extends AppCompatActivity {
     CartItemsList cartItemsLists = new CartItemsList();
     Intent intent ;
     Bundle mBundle = new Bundle();
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +115,7 @@ public class DetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.shopping_cart:
                 Toast.makeText(DetailActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                viewCart();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -138,6 +145,14 @@ public class DetailActivity extends AppCompatActivity {
                     cartItemsLists.setColour(item.getColour());
                     cartItemsLists.setQuantity(Integer.parseInt(quantity));
                     cartItemsLists.setPrice(item.getPrice());
+                    sharedPreferences = getSharedPreferences(SAVED_CART, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("id", item.getId());
+                    editor.putString("name", item.getName());
+                    editor.putString("colour", item.getColour());
+                    editor.putInt("quantity", Integer.parseInt(quantity));
+                    editor.putString("price", String.valueOf(item.getPrice()));
+                    editor.commit();
 
                     mBundle.putParcelable(ITEM_ID_KEY, cartItemsLists);
                     Toast.makeText(DetailActivity.this, quantity + " " + item.getName()
@@ -156,10 +171,17 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void viewCart(){
-        Toast.makeText(DetailActivity.this, "You chose to view your cart",
-                Toast.LENGTH_SHORT).show();
-        intent = new Intent(DetailActivity.this, ShoppingCart.class);
-        intent.putExtras(mBundle);
-        startActivity(intent);
+        Log.i("cartlist", "viewCart: "+ cartItemsLists.getId());
+        if (cartItemsLists.getId() == 0){
+            Toast.makeText(DetailActivity.this, "No items to view your cart",
+                    Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(DetailActivity.this, "You chose to view your cart",
+                    Toast.LENGTH_SHORT).show();
+            intent = new Intent(DetailActivity.this, ShoppingCart.class);
+            intent.putExtras(mBundle);
+            startActivity(intent);
+        }
     }
 }
