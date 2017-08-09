@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
             RequestPackage requestPackage = new RequestPackage();
             requestPackage.setEndPoint(JSON_URL);
             requestPackage.setParam("colour", "blue");
-//            requestPackage.setMethod("POST");
+            requestPackage.setMethod("GET");
             Intent intent = new Intent(this, MyService.class);
             intent.putExtra(MyService.REQUEST_PACKAGE, requestPackage);
             startService(intent);
