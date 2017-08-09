@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItems;
 import com.kumar.shirtstore.utils.RequestPackage;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,14 +78,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
         try {
             holder.tvName.setText(item.getName());
-//            if (mBitmaps.containsKey(item.getName())){
-//                Bitmap bitmap = mBitmaps.get(item.getName());
-//                holder.imageView.setImageBitmap(bitmap);
-//            } else {
-//                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
-//                imageDownloadTask.setViewHolder(holder);
-//                imageDownloadTask.execute(item);
-//            }
+            String imageURL = item.getPicture();
+            Picasso.with(mContext)
+                    .load(imageURL)
+                    .resize(50, 50)
+                    .into(holder.imageView);
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof IllegalStateException){
@@ -138,45 +136,4 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             mView = itemView;
         }
     }
-
-//    private class ImageDownloadTask extends AsyncTask<CartItems, Void, Bitmap> {
-//        private CartItems cartItems;
-//        private ViewHolder mHolder;
-//
-//        public void setViewHolder(ViewHolder holder) {
-//            mHolder = holder;
-//        }
-//
-//        @Override
-//        protected Bitmap doInBackground(CartItems... dataItems) {
-//
-//            cartItems = dataItems[0];
-//            String imageUrl = cartItems.getPicture();
-//            InputStream in = null;
-//
-//            try {
-//                in = (InputStream) new URL(imageUrl).getContent();
-//                return BitmapFactory.decodeStream(in);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//
-//            } finally {
-//                try {
-//                    if (in != null) {
-//                        in.close();
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap bitmap) {
-//            super.onPostExecute(bitmap);
-//            mHolder.imageView.setImageBitmap(bitmap);
-//            mBitmaps.put(cartItems.getName(), bitmap);
-//        }
-//    }
 }
