@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItems;
 
@@ -58,6 +59,7 @@ public class DetailActivity extends AppCompatActivity {
         addCart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
+                addCart();
             }
         });
 
@@ -65,14 +67,21 @@ public class DetailActivity extends AppCompatActivity {
         viewCart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
+                viewCart();
             }
         });
 
     }
 
-    private void addCart(){}
+    private void addCart(){
+        Toast.makeText(DetailActivity.this, "Product added in your cart" ,
+                Toast.LENGTH_SHORT).show();
+    }
 
-    private void viewCart(){}
+    private void viewCart(){
+        Toast.makeText(DetailActivity.this, "You chose to view your cart",
+                Toast.LENGTH_SHORT).show();
+    }
 
     private class ImageLoader extends AsyncTask<CartItems, Void, Bitmap> {
 
