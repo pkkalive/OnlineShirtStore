@@ -193,6 +193,11 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
             case R.id.shopping_cart:
                 Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.action_settings:
+                // Show the settings screen
+                Intent settingsIntent = new Intent(this, PrefsActivity.class);
+                startActivity(settingsIntent);
+                return true;
             case R.id.filter_by_colour:
                 Toast.makeText(MainActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);

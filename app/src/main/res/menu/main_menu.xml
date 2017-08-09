@@ -22,5 +22,8 @@
         android:title="@string/add_shopping_cart"
         app:showAsAction="always"/>
 
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="ifRoom"/>
 
 </menu>
