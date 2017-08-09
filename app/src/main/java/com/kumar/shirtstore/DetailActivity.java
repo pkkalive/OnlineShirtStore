@@ -1,12 +1,17 @@
 package com.kumar.shirtstore;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +20,7 @@ import com.kumar.shirtstore.model.CartItems;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -23,10 +29,12 @@ import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity {
 
+    public static final String TAG = "DetailActivity";
     private TextView tvName, tvDescription, tvPrice;
     private ImageView itemImage;
     private Button addCart, viewCart;
     CartItems item;
+    ArrayList<String> cartItemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,13 +110,50 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void addCart(){
-        Toast.makeText(DetailActivity.this, "Product added in your cart" ,
-                Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add number of shirts");
+        builder.setMessage("Please enter your desired shirts");
+        final EditText text = new EditText(this);
+        builder.setView(text);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String quantilty = text.getEditableText().toString();
+                cartItemList.add(item.getId()+ "");
+                cartItemList.add(item.getName());
+                cartItemList.add(item.getColour());
+                cartItemList.add(item.getPrice()+ "");
+                cartItemList.add(quantilty);
+                Toast.makeText(DetailActivity.this, quantilty + " " + item.getName()
+                                + " shirts added in your cart" ,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+
+
 
     }
 
     private void viewCart(){
-        Toast.makeText(DetailActivity.this, "You chose to view your cart",
-                Toast.LENGTH_SHORT).show();
+        if (cartItemList.isEmpty()){
+            Toast.makeText(DetailActivity.this, "There are no products to view your cart",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(DetailActivity.this, "You chose to view your cart",
+                    Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ShoppingCart.class);
+            intent.putStringArrayListExtra("test", cartItemList);
+            startActivity(intent);
+
+
+//            intent.putExtra("cartItemList", cartItemList);
+        }
     }
 }

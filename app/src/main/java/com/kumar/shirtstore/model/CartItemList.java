@@ -10,7 +10,6 @@ public class CartItemList implements Serializable{
 
     private int id;
     private double price;
-    private String picture;
     private String colour;
     private String size;
     private String name;
@@ -30,14 +29,6 @@ public class CartItemList implements Serializable{
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
     }
 
     public String getColour() {
