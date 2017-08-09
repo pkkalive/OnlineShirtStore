@@ -1,9 +1,5 @@
 package com.kumar.shirtstore;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -16,10 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItems;
+import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -56,8 +50,11 @@ public class DetailActivity extends AppCompatActivity {
         NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.getDefault());
         tvPrice.setText(nf.format(item.getPrice()));
 
-        ImageLoader imageDownloadTask = new ImageLoader();
-        imageDownloadTask.execute(item);
+        String imageURL = item.getPicture();
+        Picasso.with(this)
+                .load(imageURL)
+                .resize(50, 50)
+                .into(itemImage);
 
         addCart = (Button) findViewById(R.id.addCart);
         addCart.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +71,6 @@ public class DetailActivity extends AppCompatActivity {
                 viewCart();
             }
         });
-
     }
 
     @Override
@@ -108,41 +104,11 @@ public class DetailActivity extends AppCompatActivity {
     private void addCart(){
         Toast.makeText(DetailActivity.this, "Product added in your cart" ,
                 Toast.LENGTH_SHORT).show();
+
     }
 
     private void viewCart(){
         Toast.makeText(DetailActivity.this, "You chose to view your cart",
                 Toast.LENGTH_SHORT).show();
-    }
-
-    private class ImageLoader extends AsyncTask<CartItems, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(CartItems... dataItems) {
-            InputStream in = null;
-
-            try {
-                String imageUrl = item.getPicture();
-                in = (InputStream) new URL(imageUrl).getContent();
-                return BitmapFactory.decodeStream(in);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            itemImage.setImageBitmap(bitmap);
-        }
     }
 }
