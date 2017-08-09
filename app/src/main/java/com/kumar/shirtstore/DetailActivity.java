@@ -70,6 +70,10 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    private void addCart(){}
+
+    private void viewCart(){}
+
     private class ImageLoader extends AsyncTask<CartItems, Void, Bitmap> {
 
         @Override
