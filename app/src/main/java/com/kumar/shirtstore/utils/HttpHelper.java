@@ -1,6 +1,10 @@
 package com.kumar.shirtstore.utils;
 
+import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.kumar.shirtstore.MainActivity;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,6 +22,7 @@ import java.net.URL;
  * Helper class for working with a remote server
  */
 public class HttpHelper {
+    public static int responseCode;
 
     /**
      * Returns text from a URL on a web server
@@ -58,10 +63,11 @@ public class HttpHelper {
                 writer.close();
             }
 
-            int responseCode = conn.getResponseCode();
+            responseCode = conn.getResponseCode();
             if (responseCode != 200) {
                 throw new IOException("Got response code " + responseCode);
             }
+
             is = conn.getInputStream();
             return readStream(is);
 

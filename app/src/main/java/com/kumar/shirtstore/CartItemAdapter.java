@@ -70,9 +70,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         return viewHolder;
     }
 
-
-
-
     @Override
     public void onBindViewHolder(CartItemAdapter.ViewHolder holder, int position) {
         final CartItems item = mItems.get(position);
@@ -90,6 +87,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             }
         } catch (Exception e) {
             e.printStackTrace();
+            if (e instanceof IllegalStateException){
+                Toast.makeText(mContext, "Unable to load the list",
+                        Toast.LENGTH_LONG).show();
+
+            }
         }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +159,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                 return BitmapFactory.decodeStream(in);
             } catch (IOException e) {
                 e.printStackTrace();
+
             } finally {
                 try {
                     if (in != null) {

@@ -1,11 +1,13 @@
 package com.kumar.shirtstore.service;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kumar.shirtstore.model.CartItems;
@@ -34,21 +36,34 @@ public class MyService extends IntentService {
 
         RequestPackage requestPackage = (RequestPackage)
                 intent.getParcelableExtra(REQUEST_PACKAGE);
-        String response;
+        String response = null;
         try {
-            response = HttpHelper.downloadFromFeed(requestPackage);
+
+            if (HttpHelper.responseCode == 500){
+                Toast.makeText(this,
+                        "Server error. Please try again. Sorry for the inconvenience",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                response = HttpHelper.downloadFromFeed(requestPackage);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
         Gson gson = new Gson();
-        CartItems[] cartItems = gson.fromJson(response, CartItems[].class);
+        if (response != null) {
+            CartItems[] cartItems = gson.fromJson(response, CartItems[].class);
 
-        Intent messageIntent = new Intent(MY_SERVICE_MESSAGE);
-        messageIntent.putExtra(MY_SERVICE_PAYLOAD, cartItems);
-        LocalBroadcastManager manager =
-                LocalBroadcastManager.getInstance(getApplicationContext());
-        manager.sendBroadcast(messageIntent);
+            Intent messageIntent = new Intent(MY_SERVICE_MESSAGE);
+            messageIntent.putExtra(MY_SERVICE_PAYLOAD, cartItems);
+            LocalBroadcastManager manager =
+                    LocalBroadcastManager.getInstance(getApplicationContext());
+            manager.sendBroadcast(messageIntent);
+        } else {
+            Toast.makeText(this,
+                    "Server error. Please try again. Sorry for the inconvenience",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
