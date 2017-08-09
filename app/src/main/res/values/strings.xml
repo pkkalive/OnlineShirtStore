@@ -8,6 +8,8 @@
     <string name="filter_by_color">Filter by Color</string>
     <string name="add_shopping_cart">Shopping Cart</string>
     <string name="pref_display_grid">pref_display_grid</string>
+    <string name="add_cart">Add Cart</string>
+    <string name="view_cart">View Cart</string>
     <string-array
         name="colour">
         <item>brown</item>
