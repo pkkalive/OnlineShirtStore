@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
                 Toast.makeText(MainActivity.this,
                         "Please wait retriving the information",
                         Toast.LENGTH_LONG).show();
+                displayDataItems(null);
             }
             displayDataItems(null);
         }
@@ -106,10 +107,10 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
 
     private void runIntent(){
         if (networkOk) {
-
             RequestPackage requestPackage = new RequestPackage();
             requestPackage.setEndPoint(JSON_URL);
             requestPackage.setParam("colour", "blue");
+//            requestPackage.setMethod("POST");
             Intent intent = new Intent(this, MyService.class);
             intent.putExtra(MyService.REQUEST_PACKAGE, requestPackage);
             startService(intent);
@@ -128,11 +129,22 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
     private void filterByColour(final String colour) {
 
         List<CartItems> cartItemsListByColour = new ArrayList<>();
-        for (int position = 0; position < cartItemsList.size(); position++) {
-            if (cartItemsList.get(position).getColour().equals(colour)){
-                cartItemsListByColour.add(cartItemsList.get(position));
+
+        try {
+            for (int position = 0; position < cartItemsList.size(); position++) {
+                if (cartItemsList.get(position).getColour().equals(colour)) {
+                    cartItemsListByColour.add(cartItemsList.get(position));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e instanceof NullPointerException){
+                Toast.makeText(MainActivity.this,
+                        "There are no items to be loaded",
+                        Toast.LENGTH_LONG).show();
             }
         }
+
         Toast.makeText(MainActivity.this,
                 "Filtered to " + cartItemsListByColour.size() + " items from the service",
                 Toast.LENGTH_LONG).show();
