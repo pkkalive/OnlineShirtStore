@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,12 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kumar.shirtstore.model.CartItems;
-import com.kumar.shirtstore.utils.RequestPackage;
+import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +27,6 @@ import java.util.Map;
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder> {
 
     public static final String TAG = "CartItemAdapter";
-    public static final String ITEM_ID_KEY = "item_id_key";
     public static final String ITEM_KEY = "item_key";
     private List<CartItems> mItems;
     private Map<String, Bitmap> mBitmaps;
@@ -77,14 +70,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
         try {
             holder.tvName.setText(item.getName());
-            if (mBitmaps.containsKey(item.getName())){
-                Bitmap bitmap = mBitmaps.get(item.getName());
-                holder.imageView.setImageBitmap(bitmap);
-            } else {
-                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
-                imageDownloadTask.setViewHolder(holder);
-                imageDownloadTask.execute(item);
-            }
+            String imageURL = item.getPicture();
+            Picasso.with(mContext)
+                    .load(imageURL)
+                    .resize(50, 50)
+                    .into(holder.imageView);
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof IllegalStateException){
@@ -136,47 +126,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             tvName = (TextView) itemView.findViewById(R.id.itemNameText);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             mView = itemView;
-        }
-    }
-
-    private class ImageDownloadTask extends AsyncTask<CartItems, Void, Bitmap> {
-        private CartItems cartItems;
-        private ViewHolder mHolder;
-
-        public void setViewHolder(ViewHolder holder) {
-            mHolder = holder;
-        }
-
-        @Override
-        protected Bitmap doInBackground(CartItems... dataItems) {
-
-            cartItems = dataItems[0];
-            String imageUrl = cartItems.getPicture();
-            InputStream in = null;
-
-            try {
-                in = (InputStream) new URL(imageUrl).getContent();
-                return BitmapFactory.decodeStream(in);
-            } catch (IOException e) {
-                e.printStackTrace();
-
-            } finally {
-                try {
-                    if (in != null) {
-                        in.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            mHolder.imageView.setImageBitmap(bitmap);
-            mBitmaps.put(cartItems.getName(), bitmap);
         }
     }
 }

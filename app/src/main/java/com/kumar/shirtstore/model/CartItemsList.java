@@ -4,10 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Purushotham on 06/08/17.
+ * Created by Purushotham on 09/08/17.
  */
 
-public class CartItems implements Parcelable {
+public class CartItemsList implements Parcelable {
 
     private int id;
     private double price;
@@ -81,37 +81,34 @@ public class CartItems implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
+        dest.writeString(this.name);
         dest.writeDouble(this.price);
-        dest.writeString(this.picture);
         dest.writeString(this.colour);
         dest.writeString(this.size);
-        dest.writeString(this.name);
         dest.writeInt(this.quantity);
     }
 
-    public CartItems() {
+    public CartItemsList() {
     }
 
-    protected CartItems(Parcel in) {
+    protected CartItemsList(Parcel in) {
         this.id = in.readInt();
+        this.name = in.readString();
         this.price = in.readDouble();
-        this.picture = in.readString();
         this.colour = in.readString();
         this.size = in.readString();
-        this.name = in.readString();
         this.quantity = in.readInt();
     }
 
-
-    public static final Parcelable.Creator<CartItems> CREATOR = new Parcelable.Creator<CartItems>() {
+    public static final Parcelable.Creator<CartItemsList> CREATOR = new Parcelable.Creator<CartItemsList>() {
         @Override
-        public CartItems createFromParcel(Parcel source) {
-            return new CartItems(source);
+        public CartItemsList createFromParcel(Parcel source) {
+            return new CartItemsList(source);
         }
 
         @Override
-        public CartItems[] newArray(int size) {
-            return new CartItems[size];
+        public CartItemsList[] newArray(int size) {
+            return new CartItemsList[size];
         }
     };
 }
