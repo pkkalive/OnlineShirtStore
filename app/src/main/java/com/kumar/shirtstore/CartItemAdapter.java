@@ -77,14 +77,14 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
         try {
             holder.tvName.setText(item.getName());
-            if (mBitmaps.containsKey(item.getName())){
-                Bitmap bitmap = mBitmaps.get(item.getName());
-                holder.imageView.setImageBitmap(bitmap);
-            } else {
-                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
-                imageDownloadTask.setViewHolder(holder);
-                imageDownloadTask.execute(item);
-            }
+//            if (mBitmaps.containsKey(item.getName())){
+//                Bitmap bitmap = mBitmaps.get(item.getName());
+//                holder.imageView.setImageBitmap(bitmap);
+//            } else {
+//                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
+//                imageDownloadTask.setViewHolder(holder);
+//                imageDownloadTask.execute(item);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof IllegalStateException){
@@ -139,44 +139,44 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         }
     }
 
-    private class ImageDownloadTask extends AsyncTask<CartItems, Void, Bitmap> {
-        private CartItems cartItems;
-        private ViewHolder mHolder;
-
-        public void setViewHolder(ViewHolder holder) {
-            mHolder = holder;
-        }
-
-        @Override
-        protected Bitmap doInBackground(CartItems... dataItems) {
-
-            cartItems = dataItems[0];
-            String imageUrl = cartItems.getPicture();
-            InputStream in = null;
-
-            try {
-                in = (InputStream) new URL(imageUrl).getContent();
-                return BitmapFactory.decodeStream(in);
-            } catch (IOException e) {
-                e.printStackTrace();
-
-            } finally {
-                try {
-                    if (in != null) {
-                        in.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            mHolder.imageView.setImageBitmap(bitmap);
-            mBitmaps.put(cartItems.getName(), bitmap);
-        }
-    }
+//    private class ImageDownloadTask extends AsyncTask<CartItems, Void, Bitmap> {
+//        private CartItems cartItems;
+//        private ViewHolder mHolder;
+//
+//        public void setViewHolder(ViewHolder holder) {
+//            mHolder = holder;
+//        }
+//
+//        @Override
+//        protected Bitmap doInBackground(CartItems... dataItems) {
+//
+//            cartItems = dataItems[0];
+//            String imageUrl = cartItems.getPicture();
+//            InputStream in = null;
+//
+//            try {
+//                in = (InputStream) new URL(imageUrl).getContent();
+//                return BitmapFactory.decodeStream(in);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//
+//            } finally {
+//                try {
+//                    if (in != null) {
+//                        in.close();
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Bitmap bitmap) {
+//            super.onPostExecute(bitmap);
+//            mHolder.imageView.setImageBitmap(bitmap);
+//            mBitmaps.put(cartItems.getName(), bitmap);
+//        }
+//    }
 }
