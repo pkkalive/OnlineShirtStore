@@ -20,7 +20,7 @@ import java.util.Locale;
  * Created by Purushotham on 08/08/17.
  */
 
-class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity {
 
     private TextView tvName, tvDescription, tvPrice;
     private ImageView itemImage;
