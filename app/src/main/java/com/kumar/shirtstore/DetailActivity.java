@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +28,6 @@ import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity {
 
-    public static final String TAG = "DetailActivity";
     private TextView tvName, tvDescription, tvPrice;
     private ImageView itemImage;
     private Button addCart, viewCart;
