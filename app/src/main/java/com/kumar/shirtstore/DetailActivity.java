@@ -93,32 +93,6 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    public static void savePreferencesBundle(SharedPreferences.Editor editor, String key, Bundle preferences) {
-        Set<String> keySet = preferences.keySet();
-        Iterator<String> it = keySet.iterator();
-        String prefKeyPrefix = key + SAVED_CART;
-
-        while (it.hasNext()){
-            String bundleKey = it.next();
-            Object o = preferences.get(bundleKey);
-            if (o == null){
-                editor.remove(prefKeyPrefix + bundleKey);
-            } else if (o instanceof Integer){
-                editor.putInt(prefKeyPrefix + bundleKey, (Integer) o);
-            } else if (o instanceof Long){
-                editor.putLong(prefKeyPrefix + bundleKey, (Long) o);
-            } else if (o instanceof Boolean){
-                editor.putBoolean(prefKeyPrefix + bundleKey, (Boolean) o);
-            } else if (o instanceof CharSequence){
-                editor.putString(prefKeyPrefix + bundleKey, ((CharSequence) o).toString());
-            } else if (o instanceof Bundle){
-                savePreferencesBundle(editor, prefKeyPrefix + bundleKey, ((Bundle) o));
-            }
-        }
-    }
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -141,6 +115,7 @@ public class DetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.shopping_cart:
                 Toast.makeText(DetailActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                viewCart();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -196,10 +171,17 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void viewCart(){
-        Toast.makeText(DetailActivity.this, "You chose to view your cart",
-                Toast.LENGTH_SHORT).show();
-        intent = new Intent(DetailActivity.this, ShoppingCart.class);
-        intent.putExtras(mBundle);
-        startActivity(intent);
+        Log.i("cartlist", "viewCart: "+ cartItemsLists.getId());
+        if (cartItemsLists.getId() == 0){
+            Toast.makeText(DetailActivity.this, "No items to view your cart",
+                    Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(DetailActivity.this, "You chose to view your cart",
+                    Toast.LENGTH_SHORT).show();
+            intent = new Intent(DetailActivity.this, ShoppingCart.class);
+            intent.putExtras(mBundle);
+            startActivity(intent);
+        }
     }
 }
