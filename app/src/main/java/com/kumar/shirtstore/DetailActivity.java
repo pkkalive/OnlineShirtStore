@@ -1,10 +1,11 @@
 package com.kumar.shirtstore;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -24,9 +25,13 @@ import com.kumar.shirtstore.model.CartItemsList;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 import static com.kumar.shirtstore.service.MyService.ITEM_ID_KEY;
+import static com.kumar.shirtstore.service.MyService.KEY;
+import static com.kumar.shirtstore.service.MyService.SAVED_CART;
 
 /**
  * Created by Purushotham on 08/08/17.
@@ -41,6 +46,7 @@ public class DetailActivity extends AppCompatActivity {
     CartItemsList cartItemsLists = new CartItemsList();
     Intent intent ;
     Bundle mBundle = new Bundle();
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +92,32 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    public static void savePreferencesBundle(SharedPreferences.Editor editor, String key, Bundle preferences) {
+        Set<String> keySet = preferences.keySet();
+        Iterator<String> it = keySet.iterator();
+        String prefKeyPrefix = key + SAVED_CART;
+
+        while (it.hasNext()){
+            String bundleKey = it.next();
+            Object o = preferences.get(bundleKey);
+            if (o == null){
+                editor.remove(prefKeyPrefix + bundleKey);
+            } else if (o instanceof Integer){
+                editor.putInt(prefKeyPrefix + bundleKey, (Integer) o);
+            } else if (o instanceof Long){
+                editor.putLong(prefKeyPrefix + bundleKey, (Long) o);
+            } else if (o instanceof Boolean){
+                editor.putBoolean(prefKeyPrefix + bundleKey, (Boolean) o);
+            } else if (o instanceof CharSequence){
+                editor.putString(prefKeyPrefix + bundleKey, ((CharSequence) o).toString());
+            } else if (o instanceof Bundle){
+                savePreferencesBundle(editor, prefKeyPrefix + bundleKey, ((Bundle) o));
+            }
+        }
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -138,6 +170,14 @@ public class DetailActivity extends AppCompatActivity {
                     cartItemsLists.setColour(item.getColour());
                     cartItemsLists.setQuantity(Integer.parseInt(quantity));
                     cartItemsLists.setPrice(item.getPrice());
+                    sharedPreferences = getSharedPreferences(SAVED_CART, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("id", item.getId());
+                    editor.putString("name", item.getName());
+                    editor.putString("colour", item.getColour());
+                    editor.putInt("quantity", Integer.parseInt(quantity));
+                    editor.putString("price", String.valueOf(item.getPrice()));
+                    editor.commit();
 
                     mBundle.putParcelable(ITEM_ID_KEY, cartItemsLists);
                     Toast.makeText(DetailActivity.this, quantity + " " + item.getName()
