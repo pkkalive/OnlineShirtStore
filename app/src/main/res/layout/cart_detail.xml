@@ -20,10 +20,10 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/ic_minus"
         android:typeface="sans"
-        android:layout_alignBottom="@+id/from_name" />
+        android:layout_alignBottom="@+id/itemName" />
 
     <TextView
-        android:id="@+id/from_name"
+        android:id="@+id/itemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#040404"
@@ -35,7 +35,7 @@
         android:layout_toEndOf="@+id/cart_minus_img" />
 
     <TextView
-        android:id="@+id/plist_price_text"
+        android:id="@+id/itemPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/default_price"
@@ -47,7 +47,7 @@
         android:layout_alignParentEnd="true" />
 
     <TextView
-        android:id="@+id/cart_product_quantity_tv"
+        android:id="@+id/cartQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/default_quantity"
@@ -55,10 +55,10 @@
         android:textSize="15dip"
         android:typeface="sans"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/total_quantity"
-        android:layout_toEndOf="@+id/total_quantity"
-        android:layout_marginLeft="42dp"
-        android:layout_marginStart="42dp" />
+        android:layout_toRightOf="@+id/totalItemQuantity"
+        android:layout_toEndOf="@+id/totalItemQuantity"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp" />
 
     <TextView
             android:id="@+id/total"
@@ -73,7 +73,7 @@
             android:layout_alignParentStart="true" />
 
     <TextView
-        android:id="@+id/total_quantity"
+        android:id="@+id/totalItemQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/total_quantity"
@@ -84,7 +84,7 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/total_price"
+        android:id="@+id/totalItemPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/total_price"

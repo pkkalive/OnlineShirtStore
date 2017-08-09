@@ -27,7 +27,6 @@ import java.util.Map;
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder> {
 
     public static final String TAG = "CartItemAdapter";
-    public static final String ITEM_ID_KEY = "item_id_key";
     public static final String ITEM_KEY = "item_key";
     private List<CartItems> mItems;
     private Map<String, Bitmap> mBitmaps;

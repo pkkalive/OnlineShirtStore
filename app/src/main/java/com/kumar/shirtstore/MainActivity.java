@@ -208,7 +208,13 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String filterByColour = input.getEditableText().toString();
-                        filterByColour(filterByColour);
+                        if (filterByColour.isEmpty()){
+                            Toast.makeText(MainActivity.this, " You haven't entered your desired colour",
+                                    Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+                        } else {
+                            filterByColour(filterByColour);
+                        }
                     }
                 });
                 alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -230,7 +236,13 @@ public class MainActivity extends AppCompatActivity implements HttpUrl  {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String filterBySize = text.getEditableText().toString();
-                        filterBySize(filterBySize);
+                        if (filterBySize.isEmpty()){
+                            Toast.makeText(MainActivity.this, " You haven't entered your desired size",
+                                    Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+                        } else{
+                            filterBySize(filterBySize);
+                        }
                     }
                 });
                 builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

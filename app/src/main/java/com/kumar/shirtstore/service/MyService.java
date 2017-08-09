@@ -24,6 +24,7 @@ public class MyService extends IntentService {
     public static final String MY_SERVICE_MESSAGE = "MyServiceMessage";
     public static final String MY_SERVICE_PAYLOAD = "MyServicePayload";
     public static final String REQUEST_PACKAGE = "requestPackage";
+    public static final String ITEM_ID_KEY = "item_id_key";
 
     public MyService() {
         super("MyService");
