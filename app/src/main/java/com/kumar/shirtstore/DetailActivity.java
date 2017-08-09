@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +26,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private TextView tvName, tvDescription, tvPrice;
     private ImageView itemImage;
+    private Button addCart, viewCart;
     CartItems item;
 
     @Override
@@ -50,6 +53,20 @@ public class DetailActivity extends AppCompatActivity {
 
         ImageLoader imageDownloadTask = new ImageLoader();
         imageDownloadTask.execute(item);
+
+        addCart = (Button) findViewById(R.id.addCart);
+        addCart.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+            }
+        });
+
+        viewCart = (Button) findViewById(R.id.viewCart);
+        viewCart.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+            }
+        });
 
     }
 
