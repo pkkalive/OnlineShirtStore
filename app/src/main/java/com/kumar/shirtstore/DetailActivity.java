@@ -5,6 +5,10 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,6 +29,7 @@ import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity {
 
+    public static final String TAG = "DetailActivity";
     private TextView tvName, tvDescription, tvPrice;
     private ImageView itemImage;
     private Button addCart, viewCart;
@@ -71,6 +76,29 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        for (int i = 0; i < menu.size(); i++){
+            if (menu.getItem(i).getItemId() == R.id.filter_by_size){
+                menu.getItem(i).setVisible(false);
+            } else if (menu.getItem(i).getItemId() == R.id.filter_by_colour) {
+                menu.getItem(i).setVisible(false);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.shopping_cart){
+            Toast.makeText(DetailActivity.this, "You clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     private void addCart(){
